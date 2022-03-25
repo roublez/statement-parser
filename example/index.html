@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Statement Parser Example</title>
+
+        <script src="//cdn.tailwindcss.com"></script>
+        <script src="//unpkg.com/alpinejs" defer></script>
+    </head>
+    <body class="p-8">
+        <div class="max-w-8xl mx-auto container mt-8" x-data="parser">
+
+            <!-- Introduction -->
+            <h1 class="text-5xl font-bold mb-3">Statement Parser Example</h1>
+            <p>The <span class="italics">Statement Parser Example</span> helps to test the statement parser. The drop zone can be used to store files that are to be processed by the parser.</p>
+
+            <!-- Dropzone -->
+            <div class="border-2 border-dashed rounded-md mt-4 flex items-center justify-center px-6 py-12 text-gray-500">
+                <span>Drop <code>.csv</code> or <code>.pdf</code> files here</span>
+            </div>
+
+            <!-- Results -->
+            <div>
+
+            </div>
+        </div>
+
+        <script src="../dist/parser.js"></script>
+        <script>
+            document.addEventListener('alpine:init', () => {
+                Alpine.data('parser', () => ({
+                    dragging: false,
+
+                    init () {
+                        this.$root?.addEventListener('dragover', event => {
+                            event.preventDefault();
+                        });
+
+                        this.$root?.addEventListener('drop', event => {
+                            event.preventDefault();
+
+                            if (! event.dataTransfer) {
+                                return;
+                            }
+
+                            const result = StatementParser.parseAll(event.dataTransfer);
+                            console.log(result);
+                        });
+                    }
+                }))
+            })
+        </script>
+    </body>
+</html>
