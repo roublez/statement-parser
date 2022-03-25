@@ -4,7 +4,7 @@ import CSVParsableFile from './CSVParsableFile';
 
 export default class Parser {
 
-    public static parseAll (dataTransfer: DataTransfer) {
+    public static parseAll (dataTransfer: DataTransfer) : Array<ParsableFile> {
         if (! dataTransfer.items) {
             throw new InvalidDataTransferError('The data transfer is missing the "items" property.', dataTransfer);
         }
@@ -21,7 +21,7 @@ export default class Parser {
             }
         }
 
-        console.log(files);
+        return files;
     }
 
     /**

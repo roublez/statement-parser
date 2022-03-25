@@ -1,6 +1,6 @@
 import ParsableFile from '../file/ParsableFile';
 export default class Parser {
-    static parseAll(dataTransfer: DataTransfer): void;
+    static parseAll(dataTransfer: DataTransfer): Array<ParsableFile>;
     /**
      * Gets the dedicated parsable file for the transfer file
      * @param file The original transfer file

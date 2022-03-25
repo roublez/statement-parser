@@ -10,20 +10,35 @@
         <script src="//unpkg.com/alpinejs" defer></script>
     </head>
     <body class="p-8">
-        <div class="max-w-8xl mx-auto container mt-8" x-data="parser">
+        <div class="max-w-4xl mx-auto container mt-8 space-y-8" x-data="parser">
 
             <!-- Introduction -->
-            <h1 class="text-5xl font-bold mb-3">Statement Parser Example</h1>
-            <p>The <span class="italics">Statement Parser Example</span> helps to test the statement parser. The drop zone can be used to store files that are to be processed by the parser.</p>
+            <div>
+                <h1 class="text-5xl font-bold mb-2">Statement Parser Example</h1>
+                <p>The <span class="italics">Statement Parser Example</span> helps to test the statement parser. The drop zone can be used to store files that are to be processed by the parser.</p>
+            </div>
 
             <!-- Dropzone -->
-            <div class="border-2 border-dashed rounded-md mt-4 flex items-center justify-center px-6 py-12 text-gray-500">
-                <span>Drop <code>.csv</code> or <code>.pdf</code> files here</span>
+            <div>
+                <h2 class="col-span-2 text-3xl font-bold mb-2">Dropzone</h2>
+                <div class="border-2 border-dashed rounded-md flex items-center justify-center px-6 py-12 text-gray-500">
+                    <span>Drop <code>.csv</code> or <code>.pdf</code> files here</span>
+                </div>
             </div>
 
             <!-- Results -->
             <div>
-
+                <h2 class="col-span-2 text-3xl font-bold mb-2">Results</h2>
+                <div>
+                    <template x-for="result in resultsPerFile">
+                        <div class="grid grid-cols-2">
+                            <div>
+                                raw
+                            </div>
+                            <pre class="bg-gray-100 rounded-md p-3 text-sm" x-text="result.parsed"></pre>
+                        </div>
+                    </template>
+                <div>
             </div>
         </div>
 
@@ -32,6 +47,8 @@
             document.addEventListener('alpine:init', () => {
                 Alpine.data('parser', () => ({
                     dragging: false,
+
+                    resultsPerFile: [],
 
                     init () {
                         this.$root?.addEventListener('dragover', event => {
@@ -45,9 +62,16 @@
                                 return;
                             }
 
-                            const result = StatementParser.parseAll(event.dataTransfer);
-                            console.log(result);
+                            const parsedFiles = StatementParser.parseAll(event.dataTransfer);
+                            this.transformForDispay(parsedFiles);
                         });
+                    },
+
+                    transformForDispay (parsedFiles) {
+                        this.resultsPerFile = parsedFiles.map(file => ({
+                            raw: 'raw',
+                            parsed: file.serialize()
+                        }));
                     }
                 }))
             })
