@@ -1,0 +1,27 @@
+{
+  "name": "statement-parser",
+  "version": "1.0.0",
+  "description": "Statement file parser for roublez accounts and portfolios",
+  "main": "dist/parser.js",
+  "types": "types/parser.d.ts",
+  "files": [
+    "dist/parser.js",
+    "types/parser.d.ts"
+  ],
+  "scripts": {
+    "dev": "npm run development",
+    "development": "mix",
+    "watch": "mix watch",
+    "watch-poll": "mix watch -- --watch-options-poll=1000",
+    "hot": "mix watch --hot",
+    "prod": "npm run production",
+    "production": "mix --production"
+  },
+  "author": "Dennis Prudlo",
+  "license": "MIT",
+  "devDependencies": {
+    "laravel-mix": "^6.0.43",
+    "ts-loader": "^9.2.8",
+    "typescript": "^4.6.3"
+  }
+}
