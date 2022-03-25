@@ -12,7 +12,11 @@ export default class CSVParsableFile implements ParsableFile {
      * Constructs the CSVTransferFile object
      * @param file The original data transfer file
      */
-    public constructor (file: File) {
-        this.file = new FileFacade(file);
+    public constructor (file: File|FileFacade) {
+        this.file = FileFacade.ensure(file);
+    }
+
+    public data (): object {
+        return this.file;
     }
 }

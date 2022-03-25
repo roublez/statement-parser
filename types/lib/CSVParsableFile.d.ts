@@ -9,5 +9,6 @@ export default class CSVParsableFile implements ParsableFile {
      * Constructs the CSVTransferFile object
      * @param file The original data transfer file
      */
-    constructor(file: File);
+    constructor(file: File | FileFacade);
+    data(): object;
 }

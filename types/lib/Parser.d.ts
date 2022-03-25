@@ -1,3 +1,4 @@
+import FileFacade from '../file/FileFacade';
 import ParsableFile from '../file/ParsableFile';
 export default class Parser {
     static parseAll(dataTransfer: DataTransfer): Array<ParsableFile>;
@@ -6,5 +7,5 @@ export default class Parser {
      * @param file The original transfer file
      * @returns The parsable file object
      */
-    static dedicatedParsableFile(file: File): ParsableFile;
+    static dedicatedParsableFile(file: FileFacade): ParsableFile;
 }

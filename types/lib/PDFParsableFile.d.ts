@@ -1,6 +1,6 @@
 import FileFacade from "../file/FileFacade";
 import ParsableFile from "../file/ParsableFile";
-export default class CSVParsableFile implements ParsableFile {
+export default class PDFParsableFile implements ParsableFile {
     /**
      * The original data transfer file
      */
@@ -9,5 +9,6 @@ export default class CSVParsableFile implements ParsableFile {
      * Constructs the PDFTransferFile object
      * @param file The original data transfer file
      */
-    constructor(file: File);
+    constructor(file: File | FileFacade);
+    data(): object;
 }

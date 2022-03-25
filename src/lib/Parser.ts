@@ -1,6 +1,9 @@
 import { InvalidDataTransferError } from '../errors/InvalidDataTransferError';
-import ParsableFile from '../file/ParsableFile';
+import { UnsupportedFileTypeError } from '../errors/UnsupportedFileTypeError';
+import FileFacade from '../file/FileFacade';
+import ParsableFile, { SupportedFileType } from '../file/ParsableFile';
 import CSVParsableFile from './CSVParsableFile';
+import PDFParsableFile from './PDFParsableFile';
 
 export default class Parser {
 
@@ -9,7 +12,7 @@ export default class Parser {
             throw new InvalidDataTransferError('The data transfer is missing the "items" property.', dataTransfer);
         }
 
-        const files: Array<ParsableFile> = [];
+        const files: Array<FileFacade> = [];
         for (var fileIndex = 0; fileIndex < dataTransfer.items.length; fileIndex++) {
             if (dataTransfer.items[fileIndex].kind !== 'file') {
                 continue;
@@ -17,11 +20,13 @@ export default class Parser {
 
             const file = dataTransfer.items[fileIndex].getAsFile();
             if (file) {
-                files.push(Parser.dedicatedParsableFile(file));
+                files.push(new FileFacade(file));
             }
         }
 
-        return files;
+        const parsableFiles = files.map(file => Parser.dedicatedParsableFile(file));
+        console.log(parsableFiles);
+        return parsableFiles;
     }
 
     /**
@@ -29,7 +34,13 @@ export default class Parser {
      * @param file The original transfer file
      * @returns The parsable file object
      */
-    public static dedicatedParsableFile (file: File) : ParsableFile {
-        return new CSVParsableFile(file);
+    public static dedicatedParsableFile (file: FileFacade) : ParsableFile {
+        if (file.mimeType() === SupportedFileType.csv) {
+            return new CSVParsableFile(file);
+        } else if (file.mimeType() === SupportedFileType.pdf) {
+            return new PDFParsableFile(file);
+        } else {
+            throw new UnsupportedFileTypeError(`The file type [${ file.mimeType() }] is not supported.`, file);
+        }
     }
 }
