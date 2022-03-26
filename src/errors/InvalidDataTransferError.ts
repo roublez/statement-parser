@@ -1,4 +1,4 @@
-export class InvalidDataTransferError extends Error {
+export default class InvalidDataTransferError extends Error {
 
     /**
      * The referenced data transfer

@@ -23,6 +23,14 @@ export default class FileFacade {
     }
 
     /**
+     * Gets the original file's name
+     * @returns The original file's name
+     */
+    public name () : string {
+        return this.originalFile.name;
+    }
+
+    /**
      * Gets the file's client extension
      * @returns The file's client extension
      */

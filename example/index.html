@@ -68,7 +68,7 @@
                     <template x-for="result in resultsPerFile">
                         <div class="grid grid-cols-2 gap-4">
                             <div>
-                                raw
+                                <span x-text="result.meta.name"></span>
                             </div>
                             <pre class="bg-gray-800 rounded-md p-3 text-xs" x-text="result.parsed"></pre>
                         </div>
@@ -109,10 +109,17 @@
                     },
 
                     transformForDispay (parsedFiles) {
-                        this.resultsPerFile = parsedFiles.map(file => ({
-                            raw: 'raw',
-                            parsed: JSON.stringify(file.data(), null, 2)
-                        }));
+                        parsedFiles.forEach(parsedFile => {
+                            parsedFile.parse()
+                                .then(parsedFiles => {
+                                    this.resultsPerFile.push({
+                                        meta: {
+                                            name: parsedFiles.file.name()
+                                        },
+                                        parsed: JSON.stringify(parsedFiles.data(), null, 2)
+                                    });
+                                });
+                        });
                     }
                 }))
             })

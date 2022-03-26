@@ -1,5 +1,5 @@
-import FileFacade from "../file/FileFacade";
-export declare class UnsupportedFileTypeError extends Error {
+import FileFacade from "../lib/FileFacade";
+export default class UnsupportedFileTypeError extends Error {
     /**
      * The referenced file
      */

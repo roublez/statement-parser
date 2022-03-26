@@ -1,4 +1,5 @@
-import StatementParser, { EntityType } from "./lib/StatementParser";
+import EntityType from "./enums/EntityType";
+import StatementParser from "./lib/StatementParser";
 
 // @ts-ignore
 window.StatementParser = StatementParser;

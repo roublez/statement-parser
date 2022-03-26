@@ -1,7 +1,7 @@
-import FileFacade from "../file/FileFacade";
-import ParsableFile from "../file/ParsableFile";
+import FileFacade from "../lib/FileFacade";
+import Parsable from "./Parsable";
 
-export default class CSVParsableFile implements ParsableFile {
+export default class PDFParsableFile implements Parsable {
 
     /**
      * The original data transfer file
@@ -9,11 +9,17 @@ export default class CSVParsableFile implements ParsableFile {
     public readonly file: FileFacade;
 
     /**
-     * Constructs the CSVTransferFile object
+     * Constructs the PDFTransferFile object
      * @param file The original data transfer file
      */
     public constructor (file: File|FileFacade) {
         this.file = FileFacade.ensure(file);
+    }
+
+    public parse (): Promise<Parsable> {
+        return new Promise((resolve, reject) => {
+            resolve(this);
+        });
     }
 
     public data (): object {

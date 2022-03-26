@@ -1,17 +1,11 @@
-import { InvalidDataTransferError } from '../errors/InvalidDataTransferError';
-import { UnsupportedFileTypeError } from '../errors/UnsupportedFileTypeError';
-import FileFacade from '../file/FileFacade';
-import ParsableFile, { SupportedFileType } from '../file/ParsableFile';
-import CSVParsableFile from './CSVParsableFile';
-import PDFParsableFile from './PDFParsableFile';
-
-/**
- * The entity type of the files to parse.
- */
-export enum EntityType {
-    bankStatement,
-    portfolioActivity
-}
+import InvalidDataTransferError from '../errors/InvalidDataTransferError';
+import UnsupportedFileTypeError from '../errors/UnsupportedFileTypeError';
+import FileFacade from './FileFacade';
+import Parsable from '../parsers/Parsable';
+import CSVParsableFile from '../parsers/CSVParsableFile';
+import PDFParsableFile from '../parsers/PDFParsableFile';
+import SupportedFileType from '../enums/SupportedFileType';
+import EntityType from '../enums/EntityType';
 
 /**
  * The statement parser is responsible for preparing the and managing the files that need to be parsed.
@@ -34,7 +28,6 @@ export default class StatementParser {
      */
     constructor (entityType: EntityType) {
         this.entityType = entityType;
-        console.log(this.entityType === EntityType.bankStatement);
     }
 
     /**
@@ -53,7 +46,13 @@ export default class StatementParser {
         return this.assumedLocale;
     }
 
-    public parse (dataTransfer: DataTransfer) : Array<ParsableFile> {
+    /**
+     * Parses all files in the transfer
+     * @param dataTransfer The data transfer object
+     * @returns The list of the parsed files
+     */
+    public parse (dataTransfer: DataTransfer) : Array<Parsable> {
+
         if (! dataTransfer.items) {
             throw new InvalidDataTransferError('The data transfer is missing the "items" property.', dataTransfer);
         }
@@ -68,9 +67,9 @@ export default class StatementParser {
             files.push(new FileFacade(file));
         }
 
-        const parsableFiles = files.map(file => this.dedicatedParsableFile(file));
+        const parsables = files.map(file => this.dedicatedParsable(file));
 
-        return parsableFiles;
+        return parsables;
     }
 
     /**
@@ -78,13 +77,11 @@ export default class StatementParser {
      * @param file The original transfer file
      * @returns The parsable file object
      */
-    private dedicatedParsableFile (file: FileFacade) : ParsableFile {
-        if (file.mimeType() === SupportedFileType.csv) {
-            return new CSVParsableFile(file);
-        } else if (file.mimeType() === SupportedFileType.pdf) {
-            return new PDFParsableFile(file);
-        } else {
-            throw new UnsupportedFileTypeError(`The file type [${ file.mimeType() }] is not supported.`, file);
+    private dedicatedParsable (file: FileFacade) : Parsable {
+        switch (file.mimeType()) {
+            case SupportedFileType.csv: return new CSVParsableFile(file);
+            case SupportedFileType.pdf: return new PDFParsableFile(file);
+            default: throw new UnsupportedFileTypeError(`The file type [${ file.mimeType() }] is not supported.`, file);
         }
     }
 }
