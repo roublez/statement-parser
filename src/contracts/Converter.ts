@@ -9,14 +9,12 @@ export default interface Converter {
     readonly parsable: Parsable;
 
     /**
-     * Convert the data
-     * @param parsable The parsable file to convert
+     * Checks whether the converter can convert the data
      */
-    convert (parsable: Parsable) : Array<RoublezTransaction>;
+    canConvert () : boolean;
 
     /**
-     * Checks whether the converter can convert the data
-     * @param parsable The parsable file to check
+     * Convert the data
      */
-    canConvert (parsable: Parsable) : boolean;
+    convert () : Array<RoublezTransaction>;
 }

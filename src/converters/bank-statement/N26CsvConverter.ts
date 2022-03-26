@@ -23,6 +23,14 @@ export default class N26CsvConverter implements Converter {
     }
 
     /**
+     * Checks whether the converter can convert the parsable
+     * @returns Whether the converter can convert the parsable
+     */
+    canConvert () : boolean {
+        return true;
+    }
+
+    /**
      * Tries to convert the data into a list of roublez transactions
      * @returns The converted roublez transactions
      */
@@ -55,14 +63,6 @@ export default class N26CsvConverter implements Converter {
         }
 
         return transactions;
-    }
-
-    /**
-     * Checks whether the converter can convert the parsable
-     * @returns Whether the converter can convert the parsable
-     */
-    canConvert () : boolean {
-        return true;
     }
 
     /**

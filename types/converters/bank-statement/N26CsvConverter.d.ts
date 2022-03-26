@@ -12,15 +12,15 @@ export default class N26CsvConverter implements Converter {
      */
     constructor(parsable: Parsable);
     /**
-     * Tries to convert the data into a list of roublez transactions
-     * @returns The converted roublez transactions
-     */
-    convert(): Array<RoublezTransaction>;
-    /**
      * Checks whether the converter can convert the parsable
      * @returns Whether the converter can convert the parsable
      */
     canConvert(): boolean;
+    /**
+     * Tries to convert the data into a list of roublez transactions
+     * @returns The converted roublez transactions
+     */
+    convert(): Array<RoublezTransaction>;
     /**
      * Converts the row into a roublez transaction
      * @param row The row to convert
