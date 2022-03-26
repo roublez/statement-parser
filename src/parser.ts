@@ -2,8 +2,8 @@ import EntityType from "./enums/EntityType";
 import StatementParser from "./lib/StatementParser";
 
 // @ts-ignore
-window.StatementParser = StatementParser;
+window.SPStatementParser = StatementParser;
 // @ts-ignore
 window.SPEntityType = EntityType;
 
-export { StatementParser };
+export { StatementParser, EntityType };
