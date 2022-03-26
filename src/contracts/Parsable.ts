@@ -1,4 +1,7 @@
+import EntityType from '../enums/EntityType';
 import FileFacade from '../lib/FileFacade';
+import { StatementParser } from '../parser';
+import Converter from './Converter';
 
 export default interface Parsable {
 
@@ -8,12 +11,12 @@ export default interface Parsable {
     readonly file: FileFacade;
 
     /**
+     * A reference to the statement parser
+     */
+    readonly parser: StatementParser;
+
+    /**
      * Parses the file to an exchangeable format
      */
     parse () : Promise<Parsable>;
-
-    /**
-     * Gets the parsed data of the file
-     */
-    data () : object;
 }

@@ -67,8 +67,16 @@
                     </div>
                     <template x-for="result in resultsPerFile">
                         <div class="grid grid-cols-2 gap-4">
-                            <div>
-                                <span x-text="result.meta.name"></span>
+                            <div class="space-y-4">
+                                <div>
+                                    <h4 class="font-bold text-lg">Converter</h4>
+                                    <div x-text="result.meta.converter" class="font-mono text-gray-400"></div>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-lg">File</h4>
+                                    <div x-text="result.meta.fileName" class="font-mono text-gray-400"></div>
+                                    <div x-text="result.meta.fileType" class="font-mono text-gray-400"></div>
+                                </div>
                             </div>
                             <pre class="bg-gray-800 rounded-md p-3 text-xs" x-text="result.parsed"></pre>
                         </div>
@@ -103,22 +111,18 @@
                             const parser = new StatementParser(parseInt(this.entityType));
                             parser.setAssumedLocale(this.assumedLocale && this.assumedLocale.length > 0 ? this.assumedLocale : null);
 
-                            const parsedFiles = parser.parse(event.dataTransfer);
-                            this.transformForDispay(parsedFiles);
-                        });
-                    },
-
-                    transformForDispay (parsedFiles) {
-                        parsedFiles.forEach(parsedFile => {
-                            parsedFile.parse()
-                                .then(parsedFiles => {
+                            parser.parse(event.dataTransfer).then(converters => {
+                                converters.forEach(converter => {
                                     this.resultsPerFile.push({
                                         meta: {
-                                            name: parsedFiles.file.name()
+                                            converter: converter.constructor.name,
+                                            fileName: converter.parsable.file.name(),
+                                            fileType: converter.parsable.file.mimeType(),
                                         },
-                                        parsed: JSON.stringify(parsedFiles.data(), null, 2)
+                                        parsed: JSON.stringify(converter.convert(), null, 4),
                                     });
-                                });
+                                })
+                            });
                         });
                     }
                 }))

@@ -1,5 +1,6 @@
 import Parsable from '../contracts/Parsable';
 import EntityType from '../enums/EntityType';
+import Converter from '../contracts/Converter';
 /**
  * The statement parser is responsible for preparing the and managing the files that need to be parsed.
  */
@@ -32,11 +33,18 @@ export default class StatementParser {
      * @param dataTransfer The data transfer object
      * @returns The list of the parsed files
      */
-    parse(dataTransfer: DataTransfer): Array<Parsable>;
+    parse(dataTransfer: DataTransfer): Promise<Array<Converter>>;
     /**
      * Gets the dedicated parsable file for the transfer file
      * @param file The original transfer file
      * @returns The parsable file object
      */
     private dedicatedParsable;
+    /**
+     * Gets the file converter for the parsable file
+     * @param parsable The parsable file
+     * @param entityType The entity type of the parsable file
+     * @returns The matched converter
+     */
+    matchConverter(parsable: Parsable, entityType: EntityType): Converter;
 }

@@ -1,13 +1,19 @@
 import FileFacade from "../lib/FileFacade";
 import Parsable from "../contracts/Parsable";
 import { parse } from "csv-parse/browser/esm";
+import { StatementParser } from "../parser";
 
-export default class CSVParsableFile implements Parsable {
+export default class CsvParsableFile implements Parsable {
 
     /**
      * The original data transfer file
      */
     public readonly file: FileFacade;
+
+    /**
+     * A reference to the statement parser
+     */
+    readonly parser: StatementParser;
 
     /**
      * The csv data
@@ -17,9 +23,11 @@ export default class CSVParsableFile implements Parsable {
     /**
      * Constructs the CSVTransferFile object
      * @param file The original data transfer file
+     * @param parser The statement parser
      */
-    public constructor (file: File|FileFacade) {
+    public constructor (file: File|FileFacade, parser: StatementParser) {
         this.file = FileFacade.ensure(file);
+        this.parser = parser;
     }
 
     /**
@@ -59,9 +67,11 @@ export default class CSVParsableFile implements Parsable {
         });
     }
 
-    public data (): object {
-        return {
-            rows: this.rows
-        };
+    /**
+     * Gets the parsed rows
+     * @returns The parsed rows
+     */
+    public getRows () : Array<Array<string>> {
+        return this.rows;
     }
 }
