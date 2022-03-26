@@ -1,5 +1,5 @@
 import FileFacade from "../lib/FileFacade";
-import Parsable from "./Parsable";
+import Parsable from "../contracts/Parsable";
 export default class PDFParsableFile implements Parsable {
     /**
      * The original data transfer file

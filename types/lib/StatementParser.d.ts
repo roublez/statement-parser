@@ -1,4 +1,4 @@
-import Parsable from '../parsers/Parsable';
+import Parsable from '../contracts/Parsable';
 import EntityType from '../enums/EntityType';
 /**
  * The statement parser is responsible for preparing the and managing the files that need to be parsed.

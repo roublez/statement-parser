@@ -1,5 +1,5 @@
 import FileFacade from "../lib/FileFacade";
-import Parsable from "./Parsable";
+import Parsable from "../contracts/Parsable";
 import { parse } from "csv-parse/browser/esm";
 
 export default class CSVParsableFile implements Parsable {
