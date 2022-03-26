@@ -55,38 +55,39 @@ export default class StatementParser {
      * @returns The list of the parsed files
      */
     public parse (dataTransfer: DataTransfer) : Promise<Array<Converter>> {
-        return new Promise<Array<Converter>>((resolve, reject) => {
 
-            //
-            // Check if the data transfer object has an items property to read the files from
-            if (! dataTransfer.items) {
-                reject(new InvalidDataTransferError('The data transfer is missing the "items" property.', dataTransfer));
-                return;
+        //
+        // Check if the data transfer object has an items property to read the files from
+        if (! dataTransfer.items) {
+            throw new InvalidDataTransferError('The data transfer is missing the "items" property.', dataTransfer);
+        }
+
+        //
+        // Create a list of the files to check for further parsing
+        const files: Array<FileFacade> = [];
+        for (var fileIndex = 0; fileIndex < dataTransfer.items.length; fileIndex++) {
+            if (dataTransfer.items[fileIndex].kind !== 'file') {
+                continue;
             }
 
-            //
-            // Create a list of the files to check for further parsing
-            const files: Array<FileFacade> = [];
-            for (var fileIndex = 0; fileIndex < dataTransfer.items.length; fileIndex++) {
-                if (dataTransfer.items[fileIndex].kind !== 'file') {
-                    continue;
-                }
+            const file = dataTransfer.items[fileIndex].getAsFile() as File;
+            files.push(new FileFacade(file));
+        }
 
-                const file = dataTransfer.items[fileIndex].getAsFile() as File;
-                files.push(new FileFacade(file));
-            }
+        let converters: Array<Converter> = [];
+        const parsables = files.map(file => this.dedicatedParsable(file));
 
-            const parsables = files.map(file => this.dedicatedParsable(file));
+        let promise = new Promise<Array<Converter>>(resolve => resolve([]));
 
-            let converters: Array<Converter> = [];
-            let promise = null;
-            for (let parsable of parsables) {
-                promise = parsable.parse().then(file => {
-                    converters.push(this.matchConverter(file, this.entityType));
-                });
-            }
+        for (const parsable of parsables) {
+            promise = promise.then(() => parsable.parse()).then(parsed => {
+                converters.push(this.matchConverter(parsed, this.entityType));
+                return converters;
+            });
+        }
 
-            promise ? promise?.then(() => resolve(converters)) : resolve([]);
+        return promise.then(() => {
+            return converters;
         });
     }
 
