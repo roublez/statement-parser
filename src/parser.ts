@@ -1,6 +1,8 @@
-import Parser from "./lib/Parser";
+import StatementParser, { EntityType } from "./lib/StatementParser";
 
 // @ts-ignore
-window.StatementParser = Parser;
+window.StatementParser = StatementParser;
+// @ts-ignore
+window.SPEntityType = EntityType;
 
-export { Parser };
+export { StatementParser };

@@ -9,20 +9,52 @@
         <script src="//cdn.tailwindcss.com"></script>
         <script src="//unpkg.com/alpinejs" defer></script>
     </head>
-    <body class="p-8">
+    <body class="p-8 bg-gray-900 text-gray-50">
         <div class="max-w-4xl mx-auto container mt-8 space-y-8" x-data="parser">
 
             <!-- Introduction -->
             <div>
                 <h1 class="text-5xl font-bold mb-2">Statement Parser Example</h1>
-                <p>The <span class="italics">Statement Parser Example</span> helps to test the statement parser. The drop zone can be used to store files that are to be processed by the parser.</p>
+                <p class="text-gray-400">The <span class="italics">Statement Parser Example</span> helps to test the statement parser. The drop zone can be used to store files that are to be processed by the parser.</p>
             </div>
 
             <!-- Dropzone -->
             <div>
                 <h2 class="col-span-2 text-3xl font-bold mb-2">Dropzone</h2>
-                <div class="border-2 border-dashed rounded-md flex items-center justify-center px-6 py-12 text-gray-500">
-                    <span>Drop <code>.csv</code> or <code>.pdf</code> files here</span>
+                <div class="grid grid-cols-2 gap-4">
+
+                    <!-- Options -->
+                    <div>
+                        <div class="grid grid-cols-2 gap-2">
+
+                            <!-- Entity Type -->
+                            <div class="flex items-center">
+                                <label for="entity_type" class="align-middle">Entity Type</label>
+                            </div>
+                            <select id="entity_type" x-model="entityType" class="appearance-none bg-gray-800 px-4 py-2 outline-none">
+                                <template x-for="(type, index) in entityTypes" :key="index">
+                                    <option :value="index" x-text="type"></option>
+                                </template>
+                            </select>
+
+                            <!-- Assumed Locale -->
+                            <div class="flex items-center">
+                                <label for="assumedLocale" class="align-middle">Assumed Locale</label>
+                            </div>
+                            <select id="assumed_local" x-model="assumedLocale" class="appearance-none bg-gray-800 px-4 py-2 outline-none">
+                                <option value="">None</option>
+                                <option value="de">German</option>
+                                <option value="en">English</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Dropzone -->
+                    <div>
+                        <div class="bg-gray-800 rounded-md flex items-center justify-center px-6 py-12 text-gray-400">
+                            <span>Drop <code>.csv</code> or <code>.pdf</code> files here</span>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -30,12 +62,15 @@
             <div>
                 <h2 class="col-span-2 text-3xl font-bold mb-2">Results</h2>
                 <div class="space-y-4">
+                    <div x-show="resultsPerFile.length == 0" class="text-gray-400">
+                        Drop files into the dropzone to see the results.
+                    </div>
                     <template x-for="result in resultsPerFile">
-                        <div class="grid grid-cols-2">
+                        <div class="grid grid-cols-2 gap-4">
                             <div>
                                 raw
                             </div>
-                            <pre class="bg-gray-100 rounded-md p-3 text-xs" x-text="result.parsed"></pre>
+                            <pre class="bg-gray-800 rounded-md p-3 text-xs" x-text="result.parsed"></pre>
                         </div>
                     </template>
                 <div>
@@ -46,7 +81,10 @@
         <script>
             document.addEventListener('alpine:init', () => {
                 Alpine.data('parser', () => ({
-                    dragging: false,
+                    entityType: SPEntityType.bankStatement,
+                    entityTypes: Object.values(SPEntityType).filter(type => isNaN(type)),
+
+                    assumedLocale: null,
 
                     resultsPerFile: [],
 
@@ -62,7 +100,10 @@
                                 return;
                             }
 
-                            const parsedFiles = StatementParser.parseAll(event.dataTransfer);
+                            const parser = new StatementParser(parseInt(this.entityType));
+                            parser.setAssumedLocale(this.assumedLocale && this.assumedLocale.length > 0 ? this.assumedLocale : null);
+
+                            const parsedFiles = parser.parse(event.dataTransfer);
                             this.transformForDispay(parsedFiles);
                         });
                     },

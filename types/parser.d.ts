@@ -1,2 +1,2 @@
-import Parser from "./lib/Parser";
-export { Parser };
+import StatementParser from "./lib/StatementParser";
+export { StatementParser };
