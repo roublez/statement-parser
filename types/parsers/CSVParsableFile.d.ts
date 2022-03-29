@@ -28,5 +28,5 @@ export default class CsvParsableFile implements Parsable {
      * Gets the parsed rows
      * @returns The parsed rows
      */
-    getRows(): Array<Array<string>>;
+    data(): Array<Array<string>>;
 }

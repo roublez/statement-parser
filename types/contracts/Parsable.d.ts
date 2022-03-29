@@ -13,4 +13,8 @@ export default interface Parsable {
      * Parses the file to an exchangeable format
      */
     parse(): Promise<Parsable>;
+    /**
+     * Gets the parsed data
+     */
+    data(): any;
 }

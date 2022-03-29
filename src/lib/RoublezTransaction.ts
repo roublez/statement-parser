@@ -3,7 +3,7 @@ export default class RoublezTransaction {
     /**
      * The date of the transaction
      */
-    public readonly bookedAt: string;
+    public readonly bookedAt: string|null;
 
     /**
      * The amount of the transaction
@@ -33,7 +33,7 @@ export default class RoublezTransaction {
      * @param description The description of the transaction
      * @param category The category of the transaction (if part of the document)
      */
-    constructor (bookedAt: string, amount: string, name: string, description: string|null, category: string|null) {
+    constructor (bookedAt: string|null, amount: string, name: string, description: string|null, category: string|null) {
         this.bookedAt = bookedAt;
         this.amount = amount;
         this.name = name;

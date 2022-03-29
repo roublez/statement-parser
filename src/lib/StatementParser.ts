@@ -54,7 +54,7 @@ export default class StatementParser {
      * @param dataTransfer The data transfer object
      * @returns The list of the parsed files
      */
-    public parse (dataTransfer: DataTransfer) : Promise<Array<Converter>> {
+    public parse (dataTransfer: DataTransfer) : Promise<Array<Converter<any>>> {
 
         //
         // Check if the data transfer object has an items property to read the files from
@@ -74,10 +74,10 @@ export default class StatementParser {
             files.push(new FileFacade(file));
         }
 
-        let converters: Array<Converter> = [];
+        let converters: Array<Converter<any>> = [];
         const parsables = files.map(file => this.dedicatedParsable(file));
 
-        let promise = new Promise<Array<Converter>>(resolve => resolve([]));
+        let promise = new Promise<Array<Converter<any>>>(resolve => resolve([]));
 
         for (const parsable of parsables) {
             promise = promise.then(() => parsable.parse()).then(parsed => {
@@ -110,7 +110,7 @@ export default class StatementParser {
      * @param entityType The entity type of the parsable file
      * @returns The matched converter
      */
-     public matchConverter (parsable: Parsable, entityType: EntityType) : Converter {
+     public matchConverter (parsable: Parsable, entityType: EntityType) : Converter<any> {
         let converters: Array<BankStatementCsvConverterTypes> = [];
 
         if (parsable instanceof CsvParsableFile) {
@@ -127,6 +127,6 @@ export default class StatementParser {
             throw new InvalidConverterMatchingError('Multiple converters found for the given entity type');
         }
 
-        return new (converters[0])(parsable);
+        return new (converters[0])(parsable as CsvParsableFile);
     }
 }

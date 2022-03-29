@@ -71,7 +71,7 @@ export default class CsvParsableFile implements Parsable {
      * Gets the parsed rows
      * @returns The parsed rows
      */
-    public getRows () : Array<Array<string>> {
+    public data () : Array<Array<string>> {
         return this.rows;
     }
 }

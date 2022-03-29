@@ -17,4 +17,5 @@ export default class PdfParsableFile implements Parsable {
      */
     constructor(file: File | FileFacade, parser: StatementParser);
     parse(): Promise<Parsable>;
+    data(): any;
 }

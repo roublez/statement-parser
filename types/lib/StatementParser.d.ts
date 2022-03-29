@@ -33,7 +33,7 @@ export default class StatementParser {
      * @param dataTransfer The data transfer object
      * @returns The list of the parsed files
      */
-    parse(dataTransfer: DataTransfer): Promise<Array<Converter>>;
+    parse(dataTransfer: DataTransfer): Promise<Array<Converter<any>>>;
     /**
      * Gets the dedicated parsable file for the transfer file
      * @param file The original transfer file
@@ -46,5 +46,5 @@ export default class StatementParser {
      * @param entityType The entity type of the parsable file
      * @returns The matched converter
      */
-    matchConverter(parsable: Parsable, entityType: EntityType): Converter;
+    matchConverter(parsable: Parsable, entityType: EntityType): Converter<any>;
 }
