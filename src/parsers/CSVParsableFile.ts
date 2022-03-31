@@ -1,7 +1,7 @@
 import FileFacade from "../lib/FileFacade";
 import Parsable from "../contracts/Parsable";
 import { parse } from "csv-parse/browser/esm";
-import { StatementParser } from "../parser";
+import StatementParser from "../lib/StatementParser";
 
 export default class CsvParsableFile implements Parsable {
 

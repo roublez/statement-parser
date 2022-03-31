@@ -1,7 +1,5 @@
-import EntityType from '../enums/EntityType';
 import FileFacade from '../lib/FileFacade';
-import { StatementParser } from '../parser';
-import Converter from './Converter';
+import StatementParser from '../lib/StatementParser';
 
 export default interface Parsable {
 

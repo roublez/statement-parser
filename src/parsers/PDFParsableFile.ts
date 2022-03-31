@@ -1,6 +1,6 @@
 import FileFacade from "../lib/FileFacade";
 import Parsable from "../contracts/Parsable";
-import { StatementParser } from "../parser";
+import StatementParser from "../lib/StatementParser";
 
 export default class PdfParsableFile implements Parsable {
 

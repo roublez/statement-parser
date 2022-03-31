@@ -1,16 +1,14 @@
 {
     "compilerOptions": {
-        "incremental": true,
         "target": "es2022",
-        "module": "commonjs",
-        "esModuleInterop": true,
-        "skipLibCheck": true,
+        "module": "umd",
+        "sourceMap": true,
         "strict": true,
+        "noImplicitAny": true,
         "forceConsistentCasingInFileNames": true,
         "declaration": true,
-        "declarationDir": "types"
+        "declarationDir": "types",
+        "moduleResolution": "node",
     },
-    "include": [
-        "src"
-    ],
+    "include": [ "src/parser.ts" ]
 }
