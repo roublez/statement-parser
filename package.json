@@ -9,6 +9,7 @@
         "types/**/*.d.ts"
     ],
     "scripts": {
+        "start": "node example.js",
         "dev": "webpack --mode=development",
         "watch": "webpack --mode=development --watch",
         "prod": "webpack --mode=production"

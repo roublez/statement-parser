@@ -87,10 +87,13 @@
 
         <script src="../dist/parser.js"></script>
         <script>
+            const StatementParser = window.statementParser.StatementParser;
+            const EntityType = window.statementParser.EntityType;
+
             document.addEventListener('alpine:init', () => {
                 Alpine.data('parser', () => ({
-                    entityType: SPEntityType.bankStatement,
-                    entityTypes: Object.values(SPEntityType).filter(type => isNaN(type)),
+                    entityType: EntityType.bankStatement,
+                    entityTypes: Object.values(EntityType).filter(type => isNaN(type)),
 
                     assumedLocale: null,
 
