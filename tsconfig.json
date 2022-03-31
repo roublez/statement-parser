@@ -1,14 +1,14 @@
 {
     "compilerOptions": {
+        "module": "es2022",
         "target": "es2022",
-        "module": "umd",
+        "moduleResolution": "node",
         "sourceMap": true,
         "strict": true,
         "noImplicitAny": true,
         "forceConsistentCasingInFileNames": true,
         "declaration": true,
-        "declarationDir": "types",
-        "moduleResolution": "node",
+        "declarationDir": "types"
     },
     "include": [ "src/parser.ts" ]
 }
