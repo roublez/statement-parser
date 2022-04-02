@@ -1,18 +1,15 @@
-import N26CsvConverter from "./bank-statement/N26CsvConverter";
-import N26PdfConverter from "./bank-statement/N26PdfConverter";
+import CSV_N26Converter from "./bank-statement/csv/N26Converter";
 
-export type BankStatementCsvConverterTypes = (
-    typeof N26CsvConverter
-);
+import PDF_N26Converter from "./bank-statement/pdf/N26Converter";
+import PDF_DKBConverter from "./bank-statement/pdf/DKBConverter";
+import PDF_DKBCreditConverter from "./bank-statement/pdf/DKBCreditConverter";
 
-export type BankStatementPdfConverterTypes = (
-    typeof N26PdfConverter
-);
-
-export const bankStatementCsvConverters : Array<BankStatementCsvConverterTypes> = [
-    N26CsvConverter
+export const bankStatementCsvConverters : Array<any> = [
+    CSV_N26Converter
 ];
 
-export const bankStatementPdfConverters : Array<BankStatementPdfConverterTypes> = [
-    N26PdfConverter
+export const bankStatementPdfConverters : Array<any> = [
+    PDF_N26Converter,
+    PDF_DKBConverter,
+    PDF_DKBCreditConverter
 ];

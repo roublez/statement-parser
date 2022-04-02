@@ -9,6 +9,7 @@ import EntityType from '../enums/EntityType';
 import Converter from '../contracts/Converter';
 import { bankStatementCsvConverters, bankStatementPdfConverters } from '../converters';
 import InvalidConverterMatchingError from '../errors/InvalidConverterMatchingError';
+import BaseConverter from '../converters/BaseConverter';
 
 /**
  * The statement parser is responsible for preparing the and managing the files that need to be parsed.
@@ -105,17 +106,20 @@ export default class StatementParser {
      * @returns The matched converter
      */
      public matchConverter (parsable: Parsable, entityType: EntityType) : Converter<any> {
-        let converters: Array<any> = [];
+        let converterTypes: Array<any> = [];
 
         if (parsable instanceof CsvParsableFile) {
             switch (entityType) {
-                case EntityType.bankStatement: converters = bankStatementCsvConverters; break;
+                case EntityType.bankStatement: converterTypes = bankStatementCsvConverters; break;
             }
         } else if (parsable instanceof PdfParsableFile) {
             switch (entityType) {
-                case EntityType.bankStatement: converters = bankStatementPdfConverters; break;
+                case EntityType.bankStatement: converterTypes = bankStatementPdfConverters; break;
             }
         }
+
+        let converters = converterTypes.map(converterType => new converterType(parsable)) as Array<BaseConverter<Parsable, any, any>>;
+        converters = converters.filter(converter => converter.canConvert());
 
         if (converters.length === 0) {
             throw new InvalidConverterMatchingError('No converter found for the given entity type');
@@ -125,6 +129,6 @@ export default class StatementParser {
             throw new InvalidConverterMatchingError('Multiple converters found for the given entity type');
         }
 
-        return new (converters[0])(parsable);
+        return converters[0];
     }
 }

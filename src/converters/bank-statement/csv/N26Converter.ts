@@ -1,13 +1,13 @@
-import CsvParsableFile from "../../parsers/CsvParsableFile";
-import BankStatementConverter from "../BankStatementConverter";
+import CsvParsableFile from "../../../parsers/CsvParsableFile";
+import BankStatementConverter from "../../BankStatementConverter";
 
 /**
  * Responsible for converting csv parsed data from N26 statements.
  */
-export default class N26CsvConverter extends BankStatementConverter<CsvParsableFile, Array<string>> {
+export default class N26Converter extends BankStatementConverter<CsvParsableFile, Array<string>> {
 
     /**
-     * Constructs the N26CsvConverter object
+     * Constructs the N26Converter object
      * @param parsable The parsable file to convert
      */
     constructor (parsable: CsvParsableFile) {
