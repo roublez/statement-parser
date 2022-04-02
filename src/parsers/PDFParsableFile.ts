@@ -1,7 +1,8 @@
 import FileFacade from "../lib/FileFacade";
 import Parsable from "../contracts/Parsable";
 import StatementParser from "../lib/StatementParser";
-import { getDocument as getPdfDocument, TextContentItem } from "pdfjs-dist";
+import { getDocument as getPdfDocument } from "pdfjs-dist";
+import { TextItem } from "pdfjs-dist/types/src/display/api";
 
 /**
  * Defines the parsed type of a pdf page
@@ -16,7 +17,7 @@ type PageContent = {
     /**
      * The contents of the page
      */
-    contents: Array<TextContentItem>
+    contents: Array<TextItem>
 };
 
 export default class PdfParsableFile implements Parsable {
@@ -68,7 +69,11 @@ export default class PdfParsableFile implements Parsable {
 
             this.pages.push({
                 pageNumber,
-                contents: contents.items
+                contents: (contents.items as Array<TextItem>)
+                    .map(item => {
+                        item.str = item.str.trim()
+                        return item;
+                    })
             });
         }
 
