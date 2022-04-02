@@ -1,6 +1,7 @@
 import { TextItem } from "pdfjs-dist/types/src/display/api";
 import PdfParsableFile from "../../parsers/PdfParsableFile";
 import BankStatementConverter from "../BankStatementConverter";
+import { isCurrencyString, isDate } from "../helpers";
 
 /**
  * Responsible for converting pdf parsed data from N26 statements.
@@ -80,8 +81,6 @@ export default class N26PdfConverter extends BankStatementConverter<PdfParsableF
             const amountHeight = 13.8;
 
             let transactionBeginIndex = 0;
-            let dateIndex = 0;
-            let amountIndex = 0;
             for (let itemIndex = 0; itemIndex < cutoff.length; itemIndex++) {
                 const item = cutoff[itemIndex];
 
@@ -96,20 +95,12 @@ export default class N26PdfConverter extends BankStatementConverter<PdfParsableF
 
                 //
                 // If we have a transaction begin index we want to find the end of the transaction
-                if (transactionBeginIndex !== -1) {
-                    const previousItem = itemIndex > 0 ? cutoff[itemIndex - 1] : null;
-                    const nextItem = itemIndex < (cutoff.length - 1) ? cutoff[itemIndex + 1] : null;
-                    const hasEmptyPreviousItem = previousItem && previousItem.str === '' && previousItem.height === 0 && !previousItem.hasEOL;
-                    const hasEmptyNextItemWithEOL = nextItem && nextItem.str === '' && nextItem.height === 0 && nextItem.hasEOL;
-                    const isRegularAmount = hasEmptyPreviousItem && item.height === amountHeight && item.hasEOL;
-                    const isLastAmount = hasEmptyPreviousItem && hasEmptyNextItemWithEOL && item.height === amountHeight && !item.hasEOL;
+                if (transactionBeginIndex !== -1 && isCurrencyString(item.str) && ! isDate(item.str)) {
+                    const range = cutoff.slice(transactionBeginIndex, itemIndex + 1);
+                    transactions.push(range);
 
-                    if (isRegularAmount || isLastAmount) {
-                        const transactionRange = cutoff.slice(transactionBeginIndex, itemIndex);
-                        transactions.push(transactionRange);
-                        transactionBeginIndex = -1;
-                        continue;
-                    }
+                    transactionBeginIndex = -1;
+                    continue;
                 }
             }
         });
@@ -123,7 +114,8 @@ export default class N26PdfConverter extends BankStatementConverter<PdfParsableF
      * @returns The date of the transaction
      */
     public getBookedAt (context: Array<TextItem>) : string|null {
-        return null;
+        const dates = context.filter(item => isDate(item.str));
+        return dates.length > 0 ? dates[0].str : null;
     }
 
     /**
@@ -132,8 +124,8 @@ export default class N26PdfConverter extends BankStatementConverter<PdfParsableF
      * @returns The amount of the transaction
      */
     public getAmount (context: Array<TextItem>) : string {
-        console.log(context);
-        return 'null';
+        const amounts = context.filter(item => isCurrencyString(item.str) && ! isDate(item.str));
+        return amounts.length > 0 ? amounts[0].str.replaceAll(/[^\,\.\-\d]/g, '') : '';
     }
 
     /**
@@ -151,15 +143,11 @@ export default class N26PdfConverter extends BankStatementConverter<PdfParsableF
      * @returns The description of the transaction
      */
     public getDescription (context: Array<TextItem>) : string|null {
-        return null;
-    }
+        const description = context.slice(1)
+            .filter(item => !isDate(item.str) && !isCurrencyString(item.str))
+            .map(item => item.str)
+            .join('\n');
 
-    /**
-     * Gets the category of the transaction (if part of the document)
-     * @param context The parsed data context
-     * @returns The category of the transaction
-     */
-    public getCategory (context: Array<TextItem>) : string|null {
-        return null;
+        return description.length > 0 ? description : null;
     }
 }

@@ -67,13 +67,4 @@ export default class N26CsvConverter extends BankStatementConverter<CsvParsableF
 
         return context[4];
     }
-
-    /**
-     * Gets the category of the transaction (if part of the document)
-     * @param context The parsed data context
-     * @returns The category of the transaction
-     */
-    public getCategory (context: string[]) : string|null {
-        return null;
-    }
 }

@@ -10,12 +10,26 @@
         <script src="//unpkg.com/alpinejs" defer></script>
     </head>
     <body class="p-8 bg-gray-900 text-gray-50">
-        <div class="max-w-4xl mx-auto container mt-8 space-y-8" x-data="parser">
+        <div class="max-w-6xl mx-auto container mt-8 space-y-8" x-data="parser">
 
             <!-- Introduction -->
-            <div>
+            <div x-data="{ openSupported: false }">
                 <h1 class="text-5xl font-bold mb-2">Statement Parser Example</h1>
-                <p class="text-gray-400">The <span class="italics">Statement Parser Example</span> helps to test the statement parser. The drop zone can be used to store files that are to be processed by the parser.</p>
+                <p class="text-gray-400">
+                    The <span class="italics">Statement Parser Example</span> helps to test the statement parser.
+                    The drop zone can be used to store files that are to be processed by the parser.
+                    <span class="underline cursor-pointer select-none" x-on:click="openSupported = !openSupported">Toggle supported parsers</span>
+                </p>
+                <div x-show="openSupported">
+                    <h2 class="col-span-2 text-3xl font-bold mt-8 mb-2">Supported Parsers</h2>
+                    <ul class="list-disc list-inside space-y-2">
+                        <li>
+                            <a href="https://n26.com" class="mr-2 hover:underline text-gray-400">N26 Bank</a>
+                            <span class="bg-white/20 px-2 py-1 rounded-md text-xs">CSV</span>
+                            <span class="bg-white/20 px-2 py-1 rounded-md text-xs">PDF</span>
+                        </li>
+                    </ul>
+                </div>
             </div>
 
             <!-- Dropzone -->
@@ -65,20 +79,24 @@
                     <div x-show="resultsPerFile.length == 0" class="text-gray-400">
                         Drop files into the dropzone to see the results.
                     </div>
-                    <template x-for="result in resultsPerFile">
+                    <template x-for="result in resultsPerFile" x-show="resultsPerFile.length > 0">
                         <div class="grid grid-cols-2 gap-4">
                             <div class="space-y-4">
-                                <div>
-                                    <h4 class="font-bold text-lg">Converter</h4>
-                                    <div x-text="result.meta.converter" class="font-mono text-gray-400"></div>
-                                </div>
                                 <div>
                                     <h4 class="font-bold text-lg">File</h4>
                                     <div x-text="result.meta.fileName" class="font-mono text-gray-400"></div>
                                     <div x-text="result.meta.fileType" class="font-mono text-gray-400"></div>
                                 </div>
+                                <div>
+                                    <h4 class="font-bold text-lg">Converter</h4>
+                                    <div x-text="result.meta.converter" class="font-mono text-gray-400"></div>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-lg">Output</h4>
+                                    <div x-text="result.meta.amount" class="font-mono text-gray-400"></div>
+                                </div>
                             </div>
-                            <pre class="bg-gray-800 rounded-md p-3 text-xs" x-text="result.parsed"></pre>
+                            <pre class="bg-gray-800 rounded-md p-3 text-xs overflow-scroll" style="max-height: 800px" x-text="result.parsed"></pre>
                         </div>
                     </template>
                 <div>
@@ -114,15 +132,19 @@
                             const parser = new StatementParser(parseInt(this.entityType));
                             parser.setAssumedLocale(this.assumedLocale && this.assumedLocale.length > 0 ? this.assumedLocale : null);
 
+                            this.resultsPerFile = [];
+
                             parser.parse(event.dataTransfer).then(converters => {
                                 converters.forEach(converter => {
+                                    const converted = converter.convert();
                                     this.resultsPerFile.push({
                                         meta: {
                                             converter: converter.constructor.name,
                                             fileName: converter.parsable.file.name(),
                                             fileType: converter.parsable.file.mimeType(),
+                                            amount: converted.length
                                         },
-                                        parsed: JSON.stringify(converter.convert(), null, 4),
+                                        parsed: JSON.stringify(converted, null, 4),
                                     });
                                 })
                             });

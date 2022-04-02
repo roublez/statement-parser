@@ -15,8 +15,7 @@ export default abstract class BankStatementConverter<ParsableType, ContextType> 
                 this.getBookedAt(context),
                 this.getAmount(context),
                 this.getName(context),
-                this.getDescription(context),
-                this.getCategory(context)
+                this.getDescription(context)
             ));
 
         });
@@ -57,15 +56,6 @@ export default abstract class BankStatementConverter<ParsableType, ContextType> 
      * @returns The description of the transaction
      */
     public getDescription (context: ContextType): string|null {
-        return null;
-    }
-
-    /**
-     * Gets the category of the transaction (if part of the document)
-     * @param context The parsed data context
-     * @returns The category of the transaction
-     */
-    public getCategory (context: ContextType): string|null {
         return null;
     }
 }
