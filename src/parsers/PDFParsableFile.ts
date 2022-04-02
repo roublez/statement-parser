@@ -1,6 +1,23 @@
 import FileFacade from "../lib/FileFacade";
 import Parsable from "../contracts/Parsable";
 import StatementParser from "../lib/StatementParser";
+import { getDocument as getPdfDocument, TextContentItem } from "pdfjs-dist";
+
+/**
+ * Defines the parsed type of a pdf page
+ */
+type PageContent = {
+
+    /**
+     * The page number
+     */
+    pageNumber: number,
+
+    /**
+     * The contents of the page
+     */
+    contents: Array<TextContentItem>
+};
 
 export default class PdfParsableFile implements Parsable {
 
@@ -12,7 +29,12 @@ export default class PdfParsableFile implements Parsable {
     /**
      * A reference to the statement parser
      */
-     readonly parser: StatementParser;
+    readonly parser: StatementParser;
+
+    /**
+     * The pdf page contents
+     */
+    private pages: Array<PageContent> = [];
 
     /**
      * Constructs the PDFTransferFile object
@@ -24,13 +46,40 @@ export default class PdfParsableFile implements Parsable {
         this.parser = parser;
     }
 
-    public parse (): Promise<Parsable> {
-        return new Promise((resolve, reject) => {
-            resolve(this);
-        });
+    /**
+     * Parses the PDF file and puts the data into the pagesw property
+     */
+    public async parse (): Promise<Parsable> {
+
+        //
+        // Clear the parsed data
+        this.pages = [];
+
+        //
+        // Retrieve the pdf document proxy
+        const buffer = await this.file.originalFile.arrayBuffer();
+        const document = await getPdfDocument(new Uint8Array(buffer)).promise;
+
+        //
+        // Handle all pages and push the data to the parsed pages array
+        for (let pageNumber = 1; pageNumber <= document.numPages; pageNumber++) {
+            const page = await document.getPage(pageNumber);
+            const contents = await page.getTextContent();
+
+            this.pages.push({
+                pageNumber,
+                contents: contents.items
+            });
+        }
+
+        return this;
     }
 
-    public data () : any {
-        return null;
+    /**
+     * Gets the parsed pages
+     * @returns The parsed pages
+     */
+    public data () : Array<PageContent> {
+        return this.pages;
     }
 }

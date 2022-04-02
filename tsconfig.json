@@ -8,7 +8,8 @@
         "noImplicitAny": true,
         "forceConsistentCasingInFileNames": true,
         "declaration": true,
-        "declarationDir": "types"
+        "declarationDir": "types",
+        "allowJs": true
     },
     "include": [ "src/parser.ts" ]
 }

@@ -7,7 +7,7 @@ import PdfParsableFile from '../parsers/PdfParsableFile';
 import SupportedFileType from '../enums/SupportedFileType';
 import EntityType from '../enums/EntityType';
 import Converter from '../contracts/Converter';
-import { bankStatementCsvConverters, BankStatementCsvConverterTypes } from '../converters';
+import { bankStatementCsvConverters, bankStatementPdfConverters } from '../converters';
 import InvalidConverterMatchingError from '../errors/InvalidConverterMatchingError';
 
 /**
@@ -54,7 +54,7 @@ export default class StatementParser {
      * @param dataTransfer The data transfer object
      * @returns The list of the parsed files
      */
-    public parse (dataTransfer: DataTransfer) : Promise<Array<Converter<any>>> {
+    public async parse (dataTransfer: DataTransfer) : Promise<Array<Converter<any>>> {
 
         //
         // Check if the data transfer object has an items property to read the files from
@@ -77,18 +77,12 @@ export default class StatementParser {
         let converters: Array<Converter<any>> = [];
         const parsables = files.map(file => this.dedicatedParsable(file));
 
-        let promise = new Promise<Array<Converter<any>>>(resolve => resolve([]));
-
         for (const parsable of parsables) {
-            promise = promise.then(() => parsable.parse()).then(parsed => {
-                converters.push(this.matchConverter(parsed, this.entityType));
-                return converters;
-            });
+            const parsed = await parsable.parse();
+            converters.push(this.matchConverter(parsed, this.entityType));
         }
 
-        return promise.then(() => {
-            return converters;
-        });
+        return converters;
     }
 
     /**
@@ -111,11 +105,15 @@ export default class StatementParser {
      * @returns The matched converter
      */
      public matchConverter (parsable: Parsable, entityType: EntityType) : Converter<any> {
-        let converters: Array<BankStatementCsvConverterTypes> = [];
+        let converters: Array<any> = [];
 
         if (parsable instanceof CsvParsableFile) {
             switch (entityType) {
                 case EntityType.bankStatement: converters = bankStatementCsvConverters; break;
+            }
+        } else if (parsable instanceof PdfParsableFile) {
+            switch (entityType) {
+                case EntityType.bankStatement: converters = bankStatementPdfConverters; break;
             }
         }
 
@@ -127,6 +125,6 @@ export default class StatementParser {
             throw new InvalidConverterMatchingError('Multiple converters found for the given entity type');
         }
 
-        return new (converters[0])(parsable as CsvParsableFile);
+        return new (converters[0])(parsable);
     }
 }
