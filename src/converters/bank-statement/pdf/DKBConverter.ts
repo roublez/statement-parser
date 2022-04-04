@@ -137,7 +137,6 @@ export default class DKBConverter extends BankStatementConverter<PdfParsableFile
      * @returns The amount of the transaction
      */
     public getAmount (context: Array<TextItem>) : string {
-        console.table(context);
         const isIncome = context[4].str === 'Zahlungseingang';
         return (isIncome ? '' : '-') + context[context.length -1 ].str;
     }
