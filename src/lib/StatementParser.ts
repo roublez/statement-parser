@@ -38,8 +38,9 @@ export default class StatementParser {
      * Sets the assumed locale
      * @param locale The assumed locale
      */
-    public setAssumedLocale (locale: string) {
+    public setAssumedLocale (locale: string) : StatementParser {
         this.assumedLocale = locale;
+        return this;
     }
 
     /**
@@ -121,12 +122,8 @@ export default class StatementParser {
         let converters = converterTypes.map(converterType => new converterType(parsable)) as Array<BaseConverter<Parsable, any, any>>;
         converters = converters.filter(converter => converter.canConvert());
 
-        if (converters.length === 0) {
-            throw new InvalidConverterMatchingError('No converter found for the given entity type');
-        }
-
-        if (converters.length > 1) {
-            throw new InvalidConverterMatchingError('Multiple converters found for the given entity type');
+        if (converters.length === 0 || converters.length > 1) {
+            throw new InvalidConverterMatchingError(converters);
         }
 
         return converters[0];
