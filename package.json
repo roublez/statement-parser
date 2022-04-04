@@ -1,6 +1,6 @@
 {
     "name": "@roublez/statement-parser",
-    "version": "1.0.4",
+    "version": "1.1.0",
     "description": "Statement file parser for roublez accounts and portfolios",
     "main": "dist/parser.js",
     "types": "types/parser.d.ts",
