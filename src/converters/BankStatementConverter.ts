@@ -11,13 +11,14 @@ export default abstract class BankStatementConverter<ParsableType, ContextType> 
         let transactions: Array<RoublezTransaction> = [];
 
         this.prepareToConvert().forEach((context: ContextType) => {
-            transactions.push(new RoublezTransaction(
-                this.getBookedAt(context),
-                this.getAmount(context),
-                this.getName(context),
-                this.getDescription(context)
-            ));
-
+            try {
+                transactions.push(new RoublezTransaction(
+                    this.getBookedAt(context),
+                    this.getAmount(context),
+                    this.getName(context),
+                    this.getDescription(context)
+                ));
+            } catch (e) {}
         });
 
         return transactions;
