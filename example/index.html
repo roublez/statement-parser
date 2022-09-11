@@ -137,15 +137,14 @@
 
                             parser.parse(event.dataTransfer).then(converters => {
                                 converters.forEach(converter => {
-                                    const converted = converter.convert();
                                     this.resultsPerFile.push({
                                         meta: {
                                             converter: converter.constructor.name,
                                             fileName: converter.parsable.file.name(),
                                             fileType: converter.parsable.file.mimeType(),
-                                            amount: converted.length
+                                            amount: converter.data.length
                                         },
-                                        parsed: JSON.stringify(converted, null, 4),
+                                        parsed: JSON.stringify(converter.data, null, 4),
                                     });
                                 })
                             });

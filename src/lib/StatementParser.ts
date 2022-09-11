@@ -49,7 +49,7 @@ export default class StatementParser {
      * @param dataTransfer The data transfer object
      * @returns The list of the parsed files
      */
-    public async parse (dataTransfer: DataTransfer) : Promise<Array<Array<any>>> {
+    public async parse (dataTransfer: DataTransfer) : Promise<Array<BaseConverter<ParsableFile, any, any>>> {
 
         //
         // Check if the data transfer object has an items property to read the files from
@@ -81,11 +81,10 @@ export default class StatementParser {
             }
         }
 
-        let converters: Array<Array<any>> = [];
+        let converters: Array<BaseConverter<ParsableFile, any, any>> = [];
         for (const parsableFile of parsableFiles) {
             await parsableFile.parse();
-
-            converters.push(this.matchConverter(parsableFile, this.entityType).convert());
+            converters.push(this.matchConverter(parsableFile, this.entityType));
         }
 
         return converters;
@@ -97,8 +96,8 @@ export default class StatementParser {
      * @param entityType The entity type of the parsable file
      * @returns The matched converter
      */
-     public matchConverter (parsable: ParsableFile, entityType: string) : Converter<any> {
-        let converterTypes: Array<any> = [];
+     public matchConverter (parsable: ParsableFile, entityType: string) : BaseConverter<ParsableFile, any, any> {
+        let converterTypes: Array<typeof BaseConverter> = [];
 
         if (parsable instanceof CSVParsableFile) {
             switch (entityType) {
@@ -110,13 +109,15 @@ export default class StatementParser {
             }
         }
 
-        let converters = converterTypes.map(converterType => new converterType(parsable)) as Array<BaseConverter<ParsableFile, any, any>>;
-        converters = converters.filter(converter => converter.canConvert());
+        let converters = converterTypes
+            .map(converterType => new converterType(parsable))
+            .filter(converter => converter.canConvert());
 
         if (converters.length === 0 || converters.length > 1) {
             throw new InvalidConverterMatchingError(converters);
         }
 
+        converters[0].convert();
         return converters[0];
     }
 }

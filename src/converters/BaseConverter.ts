@@ -1,6 +1,6 @@
 import Converter from "../contracts/Converter";
 
-export default abstract class BaseConverter<ParsableType, ConvertTargetType, ContextType> implements Converter<ParsableType> {
+export default class BaseConverter<ParsableType, ConvertTargetType, ContextType> implements Converter<ParsableType> {
 
     /**
      * The parsable file to convert
@@ -8,11 +8,17 @@ export default abstract class BaseConverter<ParsableType, ConvertTargetType, Con
     public readonly parsable: ParsableType;
 
     /**
+     * The converted end result
+     */
+    protected data: Array<ConvertTargetType>;
+
+    /**
      * Constructs the BankStatementConverter object
      * @param parsable The parsable file to convert
      */
     constructor (parsable: ParsableType) {
         this.parsable = parsable;
+        this.data = [];
     }
 
     /**
@@ -32,10 +38,9 @@ export default abstract class BaseConverter<ParsableType, ConvertTargetType, Con
     }
 
     /**
-     * Tries to convert the data into a list of roublez transactions
-     * @returns The converted roublez transactions
+     * Tries to convert the data into a list of roublez data
      */
-    convert () : Array<ConvertTargetType> {
-        return [];
+    public convert () : void {
+        //
     }
 }

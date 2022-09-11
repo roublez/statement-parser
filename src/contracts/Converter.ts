@@ -18,5 +18,5 @@ export default interface Converter<ParsableType> {
     /**
      * Convert the data
      */
-    convert () : Array<any>;
+    convert () : void;
 }
