@@ -22,7 +22,7 @@ export default class GenericConverter extends BankStatementConverter<CSVParsable
         //
         // Check if the correct headers are being used
         const header = rows[0];
-        if (header.join(',') !== 'Name,Description,Amount,Date,Ignore,Category') {
+        if (header.join(',') !== 'Name,Description,Amount,Date,Category') {
             return false;
         }
 
@@ -85,14 +85,14 @@ export default class GenericConverter extends BankStatementConverter<CSVParsable
      * @param context The parsed data context
      * @returns Whether the transaction should be ignored in analytics
      */
-    public getIgnore (context: Array<string>) : boolean {
-        const value = context[4];
-        if (isNaN(value as any) && value == 'true') {
-            return true;
-        }
+    // public getIgnore (context: Array<string>) : boolean {
+    //     const value = context[4];
+    //     if (isNaN(value as any) && value == 'true') {
+    //         return true;
+    //     }
 
-        return ! isNaN(value as any) && parseInt(value) === 1;
-    }
+    //     return ! isNaN(value as any) && parseInt(value) === 1;
+    // }
 
     /**
      * Gets the name of the category
@@ -100,6 +100,6 @@ export default class GenericConverter extends BankStatementConverter<CSVParsable
      * @returns The name of the category
      */
      public getCategory (context: Array<string>) : string|null {
-        return context[5];
+        return context[4];
     }
 }
