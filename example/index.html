@@ -106,12 +106,11 @@
         <script src="../dist/parser.js"></script>
         <script>
             const StatementParser = window.statementParser.StatementParser;
-            const EntityType = window.statementParser.EntityType;
 
             document.addEventListener('alpine:init', () => {
                 Alpine.data('parser', () => ({
-                    entityType: EntityType.bankStatement,
-                    entityTypes: Object.values(EntityType).filter(type => isNaN(type)),
+                    entityType: 'bankStatement',
+                    entityTypes: [ 'bankStatement', 'portfolioActivity' ],
 
                     assumedLocale: null,
 
@@ -129,8 +128,10 @@
                                 return;
                             }
 
-                            const parser = new StatementParser(parseInt(this.entityType));
-                            parser.setAssumedLocale(this.assumedLocale && this.assumedLocale.length > 0 ? this.assumedLocale : null);
+                            const parser = new StatementParser(
+                                this.entityType,
+                                this.assumedLocale && this.assumedLocale.length > 0 ? this.assumedLocale : null
+                            );
 
                             this.resultsPerFile = [];
 

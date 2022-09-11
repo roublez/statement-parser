@@ -1,5 +1,5 @@
 import FileFacade from "../lib/FileFacade";
-import Parsable from "../contracts/Parsable";
+import ParsableFile from "../contracts/ParsableFile";
 import StatementParser from "../lib/StatementParser";
 import { getDocument as getPdfDocument } from "pdfjs-dist";
 import { TextItem } from "pdfjs-dist/types/src/display/api";
@@ -20,7 +20,7 @@ type PageContent = {
     contents: Array<TextItem>
 };
 
-export default class PdfParsableFile implements Parsable {
+export default class PdfParsableFile implements ParsableFile {
 
     /**
      * The original data transfer file
@@ -50,7 +50,7 @@ export default class PdfParsableFile implements Parsable {
     /**
      * Parses the PDF file and puts the data into the pagesw property
      */
-    public async parse (): Promise<Parsable> {
+    public async parse (): Promise<ParsableFile> {
 
         //
         // Clear the parsed data

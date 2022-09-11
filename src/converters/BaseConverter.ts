@@ -20,7 +20,7 @@ export default abstract class BaseConverter<ParsableType, ConvertTargetType, Con
      * @returns Whether the converter can convert the parsable
      */
     public canConvert () : boolean {
-        return true;
+        return false;
     }
 
     /**

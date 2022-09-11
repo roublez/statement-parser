@@ -1,4 +1,3 @@
-import EntityType from "./enums/EntityType";
 import StatementParser from "./lib/StatementParser";
 import InvalidConverterMatchingError from "./errors/InvalidConverterMatchingError";
 import InvalidDataTransferError from "./errors/InvalidDataTransferError";
@@ -10,7 +9,6 @@ GlobalWorkerOptions.workerSrc = require('pdfjs-dist/build/pdf.worker.entry');
 
 export {
     StatementParser,
-    EntityType,
 
     //
     // Errors

@@ -1,9 +1,9 @@
 import FileFacade from "../lib/FileFacade";
-import Parsable from "../contracts/Parsable";
+import ParsableFile from "../contracts/ParsableFile";
 import { parse } from "csv-parse/browser/esm";
 import StatementParser from "../lib/StatementParser";
 
-export default class CsvParsableFile implements Parsable {
+export default class CsvParsableFile implements ParsableFile {
 
     /**
      * The original data transfer file
@@ -33,7 +33,7 @@ export default class CsvParsableFile implements Parsable {
     /**
      * Parses the CSV file and puts the data into the rows property
      */
-    public parse () : Promise<Parsable> {
+    public parse () : Promise<ParsableFile> {
 
         //
         // Clear the parsed data

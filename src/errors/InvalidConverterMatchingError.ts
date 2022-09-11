@@ -17,7 +17,7 @@ export default class InvalidConverterMatchingError extends Error {
         } else {
             super('Multiple converters found for the given entity type');
         }
-
+        console.log(converters);
         this.converters = converters;
     }
 

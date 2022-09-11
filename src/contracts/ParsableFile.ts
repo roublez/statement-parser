@@ -1,7 +1,7 @@
 import FileFacade from '../lib/FileFacade';
 import StatementParser from '../lib/StatementParser';
 
-export default interface Parsable {
+export default interface ParsableFile {
 
     /**
      * The original data transfer file
@@ -16,7 +16,7 @@ export default interface Parsable {
     /**
      * Parses the file to an exchangeable format
      */
-    parse () : Promise<Parsable>;
+    parse () : Promise<ParsableFile>;
 
     /**
      * Gets the parsed data
