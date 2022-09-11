@@ -1,18 +1,18 @@
 import { TextItem } from "pdfjs-dist/types/src/display/api";
-import PdfParsableFile from "../../../parsers/PdfParsableFile";
+import PDFParsableFile from "../../../parsers/PDFParsableFile";
 import BankStatementConverter from "../../BankStatementConverter";
 import { isCurrencyString, isDate } from "../../helpers";
 
 /**
  * Responsible for converting pdf parsed data from DKB statements.
  */
-export default class DKBConverter extends BankStatementConverter<PdfParsableFile, Array<TextItem>> {
+export default class DKBConverter extends BankStatementConverter<PDFParsableFile, Array<TextItem>> {
 
     /**
      * Constructs the DKBConverter object
      * @param parsable The parsable file to convert
      */
-    constructor (parsable: PdfParsableFile) {
+    constructor (parsable: PDFParsableFile) {
         super(parsable);
     }
 

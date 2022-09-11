@@ -3,8 +3,8 @@ import UnsupportedFileTypeError from '../errors/UnsupportedFileTypeError';
 import InvalidEntityTypeError from '../errors/InvalidEntityTypeError';
 import FileFacade from './FileFacade';
 import ParsableFile from '../contracts/ParsableFile';
-import CsvParsableFile from '../parsers/CsvParsableFile';
-import PdfParsableFile from '../parsers/PdfParsableFile';
+import CSVParsableFile from '../parsers/CSVParsableFile';
+import PDFParsableFile from '../parsers/PDFParsableFile';
 import Converter from '../contracts/Converter';
 import { bankStatementCsvConverters, bankStatementPdfConverters } from '../converters';
 import InvalidConverterMatchingError from '../errors/InvalidConverterMatchingError';
@@ -75,8 +75,8 @@ export default class StatementParser {
             //
             // Add the file to the list
             switch (file.mimeType()) {
-                case 'text/csv': parsableFiles.push(new CsvParsableFile(file, this)); break;
-                case 'application/pdf': parsableFiles.push(new PdfParsableFile(file, this)); break;
+                case 'text/csv': parsableFiles.push(new CSVParsableFile(file, this)); break;
+                case 'application/pdf': parsableFiles.push(new PDFParsableFile(file, this)); break;
                 default: throw new UnsupportedFileTypeError(`The file type [${ file.mimeType() }] is not supported.`, file);
             }
         }
@@ -100,11 +100,11 @@ export default class StatementParser {
      public matchConverter (parsable: ParsableFile, entityType: string) : Converter<any> {
         let converterTypes: Array<any> = [];
 
-        if (parsable instanceof CsvParsableFile) {
+        if (parsable instanceof CSVParsableFile) {
             switch (entityType) {
                 case 'bankStatement': converterTypes = bankStatementCsvConverters; break;
             }
-        } else if (parsable instanceof PdfParsableFile) {
+        } else if (parsable instanceof PDFParsableFile) {
             switch (entityType) {
                 case 'bankStatement': converterTypes = bankStatementPdfConverters; break;
             }

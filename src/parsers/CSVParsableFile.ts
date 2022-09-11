@@ -3,7 +3,7 @@ import ParsableFile from "../contracts/ParsableFile";
 import { parse } from "csv-parse/browser/esm";
 import StatementParser from "../lib/StatementParser";
 
-export default class CsvParsableFile implements ParsableFile {
+export default class CSVParsableFile implements ParsableFile {
 
     /**
      * The original data transfer file

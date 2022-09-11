@@ -20,7 +20,7 @@ type PageContent = {
     contents: Array<TextItem>
 };
 
-export default class PdfParsableFile implements ParsableFile {
+export default class PDFParsableFile implements ParsableFile {
 
     /**
      * The original data transfer file
