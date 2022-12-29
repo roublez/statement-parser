@@ -74,10 +74,17 @@ export default class StatementParser {
 
             //
             // Add the file to the list
-            switch (file.mimeType()) {
-                case 'text/csv': parsableFiles.push(new CSVParsableFile(file, this)); break;
-                case 'application/pdf': parsableFiles.push(new PDFParsableFile(file, this)); break;
-                default: throw new UnsupportedFileTypeError(`The file type [${ file.mimeType() }] is not supported.`, file);
+            if (file.mimeType() === 'text/csv') {
+                parsableFiles.push(new CSVParsableFile(file, this));
+            } else if (file.mimeType() === 'application/pdf') {
+                parsableFiles.push(new PDFParsableFile(file, this));
+            } else if (file.mimeType() === 'application/vnd.ms-excel' && file.extension() === 'csv') {
+
+                //
+                // Windows systems with excel installed will define a csv file as application/vnd.ms-excel
+                parsableFiles.push(new CSVParsableFile(file, this));
+            } else {
+                throw new UnsupportedFileTypeError(`The file type [${ file.mimeType() }] is not supported.`, file);
             }
         }
 
